@@ -1,0 +1,161 @@
+span{
+    color: red;
+    margin-top: 0;
+    font-size: 12px;
+    z-index: 1;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: 0;
+}
+
+body {
+    background: linear-gradient(to right, rgba(111, 143, 111, 0.5), rgba(85, 121, 87, 0.5)), url('home.jpg');
+    background-size: cover;
+    background-position: center;
+    margin-top: 30px;
+    font-family: Arial, sans-serif;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    display: flex;
+    margin: 0;
+}
+
+.login-container h1{
+    font-weight: bold;
+    justify-self: center;
+    align-items: center
+
+}
+
+.login-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+form{
+    display: inline-block;
+    align-items: center;
+    width: 100%;
+}
+
+
+h2 {
+    text-align: center;
+    margin: 3px;
+    padding: 3px;
+    
+}
+
+form label {
+    display: inline-block;
+    width: auto;
+    text-align: left;
+}
+
+form input, form select {
+    width: 200px;
+    max-width: 400px;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+    
+
+
+.login-container label{
+    font-weight: bold;
+    margin-bottom: 10px;
+    
+}
+
+.login-container input {
+    width: 55%;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    align-self: center;
+    padding: 8px;
+}
+
+.gender-group {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    
+   
+}
+
+.gender-group label{
+    width: auto;
+    margin-bottom: 8px;
+    
+}
+
+form input[type="radio"],
+form input[type="checkbox"] {
+    width: auto;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkbox label {
+    width: auto;
+    margin-left: 20px;
+    text-align: left;
+   
+}
+
+button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+
+p{
+    margin-top: 5px;
+    text-align: center;
+}
+
+.form-summary{
+    display: inline-table;
+    justify-content: center;
+}
+
+.form-summary h3{
+    text-align: center;
+}
+
+#summary {
+    
+    padding: 10px;
+    border: 1px solid #ccc;
+    width: 300px; /* Adjust as needed */
+    background-color: #f9f9f9;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+}
+
+/* Ensure each item is displayed in a block format (vertically stacked) */
+#summary p {
+    margin: 5px 0;
+}
+
+#summary strong {
+    font-weight: bold;
+}

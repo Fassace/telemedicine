@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments</title>
+    
+    <style>
+
+        /* Styling for the appointments page */
+
+.appointments-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.appointments-container h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+#appointmentsTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+#appointmentsTable th, #appointmentsTable td {
+    padding: 12px;
+    text-align: center;
+    font-size: 1rem;
+    color: #555;
+}
+
+#appointmentsTable th {
+    background-color: green;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+#appointmentsTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#appointmentsTable tr:hover {
+    background-color: #f1f1f1;
+}
+
+#appointmentsTable td {
+    border-bottom: 1px solid #ddd;
+}
+
+#appointmentsTable td button {
+    background-color: #9b1414;
+    color: #ffffff;
+    border: none;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+#appointmentsTable td button:hover {
+    background-color: green;
+}
+
+/* Message styling */
+#message {
+    display: none;
+    padding: 10px;
+    margin-top: 15px;
+    text-align: center;
+    border-radius: 4px;
+}
+
+#message.success {
+    color: green;
+    background-color: #e0ffe0;
+}
+
+#message.failed {
+    color: red;
+    background-color: #ffe0e0;
+}
+
+
+    </style>
+
+
+</head>
+<body>
+    <div class="appointments-container">
+        <h2>My Scheduled Appointments</h2>
+        <table id="appointmentsTable">
+            <thead>
+                <tr>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Appointments will be populated here -->
+            </tbody>
+        </table>
+        <div id="message" style="display: block;"></div>
+    </div>
+
+    <script>
+        const messageDiv = document.getElementById('message');
+
+        function showMessage(type, text) {
+            messageDiv.style.display = 'block';
+            messageDiv.style.color = type === 'success' ? 'green' : 'red';
+            messageDiv.textContent = text;
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        async function loadAppointments() {
+            try {
+                const response = await fetch('/telemedicine/api/appointments/view');
+                const appointments = await response.json();
+
+                const tbody = document.querySelector('#appointmentsTable tbody');
+                tbody.innerHTML = ''; // Clear existing rows
+
+                appointments.forEach(appointment => {
+                    const row = document.createElement('tr');
+
+                    row.innerHTML = `
+                        <td>${appointment.doctor_name}</td>
+                        <td>${appointment.appointment_date}</td>
+                        <td>${appointment.appointment_time}</td>
+                        <td>${appointment.status}</td>
+                        <td>
+                            <button onclick="cancelAppointment(${appointment.id})">Cancel</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading appointments:', error);
+                showMessage('failed', 'Error loading appointments.');
+            }
+        }
+
+        async function cancelAppointment(appointmentId) {
+            try {
+                const response = await fetch(`/telemedicine/api/appointments/cancel/${appointmentId}`, {
+                    method: 'DELETE',
+                });
+                const result = await response.json();
+
+                if (response.status === 200) {
+                    showMessage('success', 'Appointment canceled successfully!');
+                    loadAppointments(); // Refresh the list
+                } else {
+                    showMessage('failed', result.message || 'Failed to cancel appointment.');
+                }
+            } catch (error) {
+                console.error('Error canceling appointment:', error);
+                showMessage('failed', 'An error occurred while canceling the appointment.');
+            }
+        }
+
+        // Load appointments on page load
+        loadAppointments();
+    </script>
+</body>
+</html>

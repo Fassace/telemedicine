@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Registration</title>
+    <link rel="stylesheet" href="/form.css">
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Doctor Register</h2>
+        <form id="registerForm">
+            <label for="regFirstname">First Name:</label>
+            <input type="text" id="regFirstname" required>  <br>
+        
+            <label for="regLastname">Last Name:</label>
+            <input type="text" id="regLastname" required>   <br>
+        
+            <label for="regEmail">Email:</label>
+            <input type="email" id="regEmail" required>  <br>
+        
+            <label for="regSpecialization">Specialization:</label>
+            <input type="text" id="regSpecialization"> <br>
+        
+            <label for="regPhone">Phone:</label>
+            <input type="text" id="regPhone">   <br>
+        
+            <label for="regSchedule">Schedule:</label>
+            <textarea id="regSchedule"></textarea>   <br>
+        
+            <button type="submit">Register</button>
+        </form>
+        <!-- <p> Already have an account? <a href="/telemedicine/api/doctors/login"> Login here</a> </p> -->
+        <div id="message" style="display: none;"></div>
+    </div>
+
+    <script>
+        const messageDiv = document.getElementById('message');
+
+        function showMessage(type, text){
+            messageDiv.style.display = 'block';
+            if(type === 'success'){
+                messageDiv.style.color = 'green';
+            } else  {
+                messageDiv.style.color = 'red';
+            }
+            messageDiv.textContent = text;
+
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Registration form
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const first_name = document.getElementById('regFirstname').value;
+            const last_name = document.getElementById('regLastname').value;
+            const email = document.getElementById('regEmail').value;
+            const specialization = document.getElementById('regSpecialization').value;
+            const phone = document.getElementById('regPhone').value;
+            const schedule = document.getElementById('regSchedule').value;
+
+            // Transmit the data
+            const response = await fetch('/telemedicine/api/doctors/register', { 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ first_name, last_name, specialization, email, phone, schedule })
+            });
+
+            const result = await response.json();
+
+            if (response.status === 201) {
+                showMessage('success', result.message);
+            } else {
+                showMessage('failed', result.message);
+            }
+        });
+    </script>
+</body>
+</html>

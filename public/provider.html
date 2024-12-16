@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provider List</title>
+    <style>
+        /* Basic styling for provider list */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1 {
+            color: #333;
+            margin: 20px;
+        }
+        .provider-container {
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+        }
+        .provider-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 12px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .provider-card h3 {
+            margin-top: 0;
+            color: green;
+        }
+        .provider-details p {
+            margin: 4px 0;
+            line-height: 1.5;
+        }
+        /* Responsive layout */
+        @media (max-width: 600px) {
+            .provider-container {
+                padding: 10px;
+            }
+        }
+    </style>
+    <script>
+        // Fetch and display providers
+        async function fetchProviders() {
+            try {
+                const response = await fetch('/telemedicine/api/doctors/list');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const providers = await response.json();
+                
+                const providerContainer = document.getElementById('providerContainer');
+                providerContainer.innerHTML = providers.map(provider => `
+                    <div class="provider-card">
+                        <h3>${provider.first_name} ${provider.last_name}</h3>
+                        <div class="provider-details">
+                            <p><strong>Specialization:</strong> ${provider.specialization || 'N/A'}</p>
+                            <p><strong>Email:</strong> ${provider.email}</p>
+                            <p><strong>Phone:</strong> ${provider.phone}</p>
+                            <p><strong>Schedule:</strong> ${provider.schedule || 'Not available'}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching providers:', error);
+                document.getElementById('providerContainer').innerHTML = '<p>Error loading providers. Please try again later.</p>';
+            }
+        }
+
+        // Call the fetch function when the page loads
+        window.onload = fetchProviders;
+    </script>
+</head>
+<body>
+    <h1>Our Healthcare Providers</h1>
+    <div id="providerContainer" class="provider-container">
+        <p>Loading providers...</p>
+    </div>
+</body>
+</html>

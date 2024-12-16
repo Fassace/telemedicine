@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+    background: linear-gradient(to right, rgba(111, 143, 111, 0.5), rgba(85, 121, 87, 0.5)), url('home.jpg');
+    background-size: cover;
+    background-position: center;
+    margin-top: 30px;
+    font-family: Arial, sans-serif;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    display: flex;
+    margin: 0;
+}
+label , input{
+    display: block;
+    width: 90%;
+    padding: 5px 5px;
+    margin: 5px 5px;
+    
+}
+
+button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 5px;
+    margin: 3px;
+    font-size: 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    width: 50%;
+    text-align: center;
+}
+
+#patientSection {
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    border-radius: 5px;
+   
+}
+    </style>
+    <title>Patient Profile</title>
+</head>
+<body>
+    
+    <div>
+        <h3> Edit Patient Profile</h3>
+    
+    <form id="editForm">
+      
+        <label for="editFirstname">First Name:</label>
+        <input type="text" id="editFirstname"  required>
+    
+        <label for="editLastname">Last Name:</label>
+        <input type="text" id="editLastname" required>
+    
+        <label for="editEmail">Email:</label>
+        <input type="email" id="editEmail" required>
+
+        <label for="editAddress">Address:</label>
+        <textarea id="editAddress" required></textarea>
+        <button type="submit">Update</button>
+        <button type="reset">Reset</button>
+        <div id="message" style="display: none;"></div>
+    </form>
+    </div>
+
+    <div id="patientSection" style="display: block;">
+        <h3>Patient Profile</h3>
+        <p><strong>First Name: </strong><span id="patientFirstname"></span></p>
+        <p><strong>Last Name: </strong><span id="patientLastname"></span></p>
+        <p><strong>Email: </strong><span id="patientEmail"></span></p>
+        <p><strong>Address: </strong><span id="patientAddress"></span></p>
+
+    </div>
+    
+    <script>
+
+const messageDiv = document.getElementById('message');
+const patientSection = document.getElementById('patientSection');
+const patientfirstnameSpan = document.getElementById('patientFirstname');
+const patientlastnameSpan = document.getElementById('patientLastname');
+const patientemailSpan = document.getElementById('patientEmail');
+const patientaddressSpan = document.getElementById('patientAddress');
+const logoutButton = document.getElementById('logoutButton');
+
+function showMessage(type, text){
+    messageDiv.style.display = 'block';
+    if(type == 'success'){
+        messageDiv.style.color = 'green'
+    } else  {
+    messageDiv.style.color = 'red';
+    }
+    messageDiv.textContent = text;
+
+
+    setTimeout(() => {
+        messageDiv.style.display = 'none';
+
+    }, 3000);
+
+}
+
+document.getElementById('editForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const first_name = document.getElementById('editFirstname').value;
+    const last_name = document.getElementById('editLastname').value;
+    const email = document.getElementById('editEmail').value;
+    const address = document.getElementById('editAddress').value;
+
+
+    // Transmit the data
+    const response = await fetch('/telemedicine/api/patients/individual/edit', { 
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ first_name, last_name, email, address })
+    });
+
+    const result = await response.json();
+
+    if (response.status === 200) {
+        showMessage('success', result.message);
+        getPatient();
+    } else {
+        showMessage('failed', result.message);
+    }
+});
+
+    
+
+    // Fetch and display patient profile data
+    async function getPatient() {
+                try {
+                    const response = await fetch('/telemedicine/api/patients/individual', { method: 'GET' });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        patientfirstnameSpan.textContent = result.patient.first_name;
+                        patientlastnameSpan.textContent = result.patient.last_name;
+                        patientemailSpan.textContent = result.patient.email;
+                        patientaddressSpan.textContent = result.patient.address;
+                        patientSection.style.display = 'block';
+                    } else {
+                        const result = await response.json();
+                        showMessage('failed', result.message || 'Failed to load patient data.');
+                    }
+                } catch (error) {
+                    showMessage('failed', 'An error occurred while loading patient data.');
+                    console.error('Error fetching patient data:', error);
+                }
+            }
+
+            // Call getPatient to load data on dashboard load
+            getPatient();
+            
+    </script>
+
+
+</body>
+
+</html>

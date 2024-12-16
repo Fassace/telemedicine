@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telemedicine Dashboard</title>
+    <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="/telemedicine-logo.png" alt="Telemedicine Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="/telemedicine/api/patients/dashboard">Dashboard</a></li>
+                <li><a href="/telemedicine/api/patients/individual/edit">View Profile</a></li>
+                <li><a href="/telemedicine/api/appointments/createAppointment">Book Appointment</a></li>
+                <li><a href="/telemedicine/api/doctors/viewProviders">View Doctors</a></li>
+                <li><button id="logoutButton">Logout</button></li>
+
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <small>Hello, <strong> <span id="patientFirstname"></span> </strong> Welcome to your Telemedicine Dashboard</a>
+            </header>
+
+            <!-- Patient Profile Section -->
+            <section id="patientSection" style="display: none;">
+                <h3>Patient Profile</h3>
+                <p><strong>First Name: </strong><span id="patientFirstname"></span></p>
+                <p><strong>Last Name: </strong><span id="patientLastname"></span></p>
+                <p><strong>Email: </strong><span id="patientEmail"></span></p>
+                <p><strong>Address: </strong><span id="patientAddress"></span></p>
+            </section>
+
+            <!-- Stats Section -->
+            <section class="stats-section">
+                <div class="stat-card">
+                    <p>Next Appointment</p>
+                    <h2>None</h2>
+                </div>
+                <div class="stat-card">
+                    <p>Available Providers</p>
+                    <h2>5</h2>
+                </div>
+                <div class="stat-card">
+                    <p>Messages</p>
+                    <h2>3 Unread</h2>
+                </div>
+            </section>
+
+            <!-- Schedule Section -->
+            
+   
+            
+        </div>
+    </div>
+
+    <!-- Message Display -->
+    <div id="message" style="display: none;"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const patientSection = document.getElementById('patientSection');
+            const patientfirstnameSpan = document.getElementById('patientFirstname');
+            const patientlastnameSpan = document.getElementById('patientLastname');
+            const patientemailSpan = document.getElementById('patientEmail');
+            const patientaddressSpan = document.getElementById('patientAddress');
+            const messageDiv = document.getElementById('message');
+
+            // Display message function
+            function showMessage(type, text) {
+                messageDiv.style.display = 'block';
+                messageDiv.style.color = type === 'success' ? 'green' : 'red';
+                messageDiv.textContent = text;
+
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 3000);
+            }
+
+            // Fetch and display patient profile data
+            async function getPatient() {
+                try {
+                    const response = await fetch('/telemedicine/api/patients/individual', { method: 'GET' });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        patientfirstnameSpan.textContent = result.patient.first_name;
+                        patientlastnameSpan.textContent = result.patient.last_name;
+                        patientemailSpan.textContent = result.patient.email;
+                        patientaddressSpan.textContent = result.patient.address;
+                        patientSection.style.display = 'block';
+                    } else {
+                        const result = await response.json();
+                        showMessage('failed', result.message || 'Failed to load patient data.');
+                    }
+                } catch (error) {
+                    showMessage('failed', 'An error occurred while loading patient data.');
+                    console.error('Error fetching patient data:', error);
+                }
+            }
+
+            // Call getPatient to load data on dashboard load
+            getPatient();
+
+            // Logout functionality
+            document.getElementById('logoutButton').addEventListener('click', function() {
+        fetch('/telemedicine/api/patients/logout', {
+            method: 'GET', // or 'POST', depending on your route setup
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Logout failed.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message); // Show a success message
+            window.location.href = '/telemedicine/api/patients/login'; // Redirect to the home page
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred during logout.');
+        });
+    });            
+
+
+    //view appointment
+    async function loadAppointments() {
+    try {
+        const response = await fetch('/telemedicine/api/appointments/view');
+        const appointments = await response.json();
+        const appointmentList = document.getElementById('appointmentList');
+        appointmentList.innerHTML = '';
+
+        appointments.forEach(appointment => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                Doctor: ${appointment.doctor_first_name} ${appointment.doctor_last_name} <br>
+                Date: ${appointment.appointment_date} <br>
+                Time: ${appointment.appointment_time} <br>
+                <button onclick="cancelAppointment(${appointment.id})">Cancel</button>
+            `;
+            appointmentList.appendChild(li);
+        });
+    } catch (error) {
+        console.error('Error loading appointments:', error);
+    }
+}
+
+loadAppointments();
+
+
+
+//cancel appointment
+async function cancelAppointment(appointmentId) {
+    try {
+        const response = await fetch(`/telemedicine/api/appointments/cancel/${id}`, {
+            method: 'DELETE'
+        });
+        const result = await response.json();
+        if (response.ok) {
+            alert(result.message);
+            loadAppointments(); // Refresh the appointment list
+        } else {
+            alert(result.message || 'Failed to cancel appointment');
+        }
+    } catch (error) {
+        console.error('Error canceling appointment:', error);
+    }
+}
+
+
+
+        });
+    </script>
+</body>
+</html>

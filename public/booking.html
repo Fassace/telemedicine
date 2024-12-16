@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment</title>
+    <link rel="stylesheet" href="/form.css">
+</head>
+<body>
+    <div class="booking-container">
+        <h2>Book Appointment</h2>
+        <form id="appointmentForm">
+            <label for="doctorSelect">Select Doctor:</label>
+            <select id="doctorSelect">
+                <!-- Options will be populated dynamically from the server -->
+            </select> <br>
+
+            <label for="appointmentDate">Appointment Date:</label>
+            <input type="date" id="appointmentDate"> <br>
+
+            <label for="appointmentTime">Appointment Time:</label>
+            <input type="time" id="appointmentTime"> <br>
+
+            <button type="submit">Book Appointment</button>
+        </form>
+        <div id="message" style="display: block;"></div>
+
+        <p style="color: white;"> View your appointment <strong><a href="/telemedicine/api/appointments/viewAppointments" style="color: green;"> here</a></strong></p>
+    </div>
+
+    
+
+    <script>
+
+
+const messageDiv = document.getElementById('message');
+
+
+function showMessage(type, text){
+messageDiv.style.display = 'block';
+
+if (type === 'success') {
+    messageDiv.style.color = 'green';
+} else {
+    messageDiv.style.color = 'red';
+}
+messageDiv.textContent = text;
+
+
+setTimeout(() => {
+messageDiv.style.display = 'none';
+
+}, 3000);
+}
+
+        // Fetch doctors for the select dropdown
+        async function loadDoctors() {
+            try {
+                const response = await fetch('/telemedicine/api/doctors/individual');
+                const doctors = await response.json();
+                const doctorSelect = document.getElementById('doctorSelect');
+
+                // Populate the doctor select dropdown
+                doctors.forEach(doctor => {
+                    const option = document.createElement('option');
+                    option.value = doctor.id; // Assuming doctor has an 'id' field
+                    option.textContent = `${doctor.first_name} ${doctor.last_name}`;
+                    doctorSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading doctors:', error);
+            }
+        }
+
+        loadDoctors();
+
+        document.getElementById('appointmentForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); // Prevent the default form submission
+
+    const doctor_id = document.getElementById('doctorSelect').value;
+    const appointment_date = document.getElementById('appointmentDate').value;
+    const appointment_time = document.getElementById('appointmentTime').value;
+
+     // Debug: Log data before sending it
+     console.log("Sending data:", { doctor_id, appointment_date, appointment_time });
+
+
+    try {
+        const response = await fetch('/telemedicine/api/appointments/book', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ doctor_id, appointment_date, appointment_time })
+        });
+
+        const result = await response.json();
+        console.log("Result from server:", result);
+
+        // Check if the booking was successful based on the response status
+        if (response.status === 201) { // Booking was successful
+            showMessage('success', result.message || 'Appointment booked successfully!');
+            // getPatient(); // Call to get updated patient info, if necessary
+        } else {
+            showMessage('failed', result.message || 'Failed to book appointment. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error in booking:', error);
+        showMessage('failed', 'An error occurred while booking the appointment.');
+    }
+
+});
+
+
+
+        
+    </script>
+</body>
+</html>

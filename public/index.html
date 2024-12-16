@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telemedicine</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+  <!-- side bar -->
+ <!-- <section class="all"> -->
+  <!-- <div class="side-bar">
+    <div class="side-logo">
+      <ul class="side-main">
+        <li>
+          <a href="#">
+            <i class="fa-home">Home</i>
+          </a>
+        </li>
+
+        <li>
+          <input for ="search" class="search" placeholder="Search">  <i class="fa-search"></i>
+        </li>
+      </ul>
+    </div> -->
+
+  <!-- </div> -->
+
+  <section class="full-screen-image"> 
+
+
+    <header>
+        <div class="container">
+          <a href="/"><img src="/images/logo.png" class="logo" alt="Telemedicine"></a>
+            <nav>
+              <input type="checkbox" id="check">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li class="profile">
+                        Register
+                        <ul class="sub-menu-1">
+                            <li class="next">Provider
+                                <ul class="sub-menu-2">
+                                    <li><a href="/telemedicine/api/doctors/register">Sign Up</a></li>
+                                    <!-- <li><a href="#">Sign In</a></li> -->
+                                </ul>
+                            </li>
+                            <li class="next">Patient
+                                <ul class="sub-menu-2">
+                                    <li><a href="/telemedicine/api/patients/register">Sign Up</a></li>
+                                    <li><a href="/telemedicine/api/patients/login">Sign In</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                   
+                    <label for="check" class="close-menu"> <i class="fas fa-times"></i></label> 
+                </ul>
+                
+                <label for="check" class="open-menu"> <i class="fas fa-bars"></i></label>
+            </nav>
+        </div>
+    </header>
+    <div class="inner"> 
+        <small>Welcome to Our</small>
+        <h2> Telemedicine Platform</h2>
+        <p>Online doctor visits for primary care, mental health, and therapy. <br>
+        Speak to a top doctor online and get personalized, high-quality healthcare from anywhere.</p>
+        <button type="button"> <a href="/telemedicine/api/patients/login" style="text-decoration: none; color: white;"> <span></span> Book an Appointment </a></button>
+        
+    </div>
+</section>
+
+<!-- </section> -->
+    
+
+
+    <!-- Section 1: About us -->
+
+    <section class="about-section">
+      <div class="about-content">
+          <h2>About Us</h2>
+          <p>Our highly-skilled online doctors are trained at the top Africa medical schools with an average of 15 years of experience.
+            Our online doctors give you and your entire family the peace of mind you should expect from your healthcare provider</p>
+      </div>
+      <div class="about-image">
+          <img src="/images/bg1.jpg" alt="about us">
+      </div>
+  </section>
+  
+
+      <!--Section 2: Column Content  -->
+
+      <section class="business-section">
+        <h2>Services</h2>
+        <h4>Below are the services we offer</h4>
+
+        <div class="business-cards">
+          <div class="business-cards.1"> 
+            <!-- Column 1 -->
+            <div class="card">
+                <img src="/images/bg2.jpg" alt="TeleHealth">
+                <h3>TeleHealth</h3>
+                <p>Say goodbye to waiting rooms! Our online hospital is here to treat you from the comfort of your couch. Book now!</p>
+            </p>
+            </div>
+            </div>
+
+            <!-- Column 2 -->
+            <div class="card">
+                <img src="/images/bg3.jpg" alt="Loss Weight">
+                <h3>Weight lost</h3>
+                <p>Patients rave about our services! Join the revolution in healthcare and experience the difference today!</p>
+            </div>
+
+            <!-- Column 3 -->
+            <div class="card">
+                <img src="/images/bg4.jpg" alt="Mental Health Consult">
+                <h3>Mental Health Consult</h3>
+                <p>Don't wait for a miracle! Schedule your appointment and take charge of your health like a boss!</p>
+            </div>
+        </div>
+    </section>
+
+     
+  <!-- contact form -->
+  <section class="contact-section">
+  <div class="contact-form-wrapper">
+    <form action="#" class="contact-form">
+        <h2>Contact Us</h2>
+      <div class="columns">
+        <div class="left-column">
+            <input type="text" placeholder="Your Name" class="form-input">
+            <input type="email" placeholder="Your Email" class="form-input">
+            <input type="text" placeholder="Your Phone" class="form-input">
+        </div>
+
+        <div class="right-column">
+            <textarea placeholder="Your Message" class="form-textarea"></textarea>
+          </div>
+      </div>
+        <div class="form-submit">
+            <button type="submit">Send Message</button>
+        </div>
+    </form>
+  </section>
+
+  <!-- footer -->
+  <section class= "footer">   
+    <div class="footer-container">
+      <div class="footer-row">
+        <div class="footer-col">
+          <h4>Get to know us</h4> 
+            <ul>
+              <li><a href ="#">about us</a></li>
+              <li><a href ="#">In the News</a></li>
+              <li><a href ="#">Medical Team</a></li>
+              <li><a href ="#">Blog</a></li>
+              <li><a href ="#">Career</a></li>
+            </ul>
+        </div> <br>
+        <div class="footer-col">
+          <h4>Our Services</h4> 
+            <ul>
+              <li><a href ="#">Urgent Care</a></li>
+              <li><a href ="#">Mental Health</a></li>
+              <li><a href ="#">Weight Loss</a></li>
+              <li><a href ="#">Disaster Releif</a></li>
+              <li><a href ="#">General Health and Prevention Care</a></li>
+            </ul>
+        </div> <br>
+        <div class="footer-col">
+          <h4>Let us help</h4> 
+            <ul>
+              <li><a href ="mailto:babatundefasasi2020@gmail.com"> babatundefasasi2020@gmail.com</a></li>
+              <li><a href ="#">Membership</a></li>
+              <li><a href ="#">FAQ</a></li>
+            </ul>
+        </div> <br>
+        <div class="footer-col social-links">
+          <h4>follow us</h4> 
+            <div class="social-links">
+              <a href ="facebook.com"><img src="/images/facebook.png" class="social-icon"></a>
+              <a href ="twitter.com"><img src="/images/twitter.png" class="social-icon"></a>
+            </div>  <br>
+      </div> 
+    </div>
+</section>
+
+</section>
+  
+</body>
+</body>
+</html>
