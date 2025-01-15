@@ -2,7 +2,7 @@
 
 ## Overview
 is a robust telemedicine platform designed to bridge the gap between patients and healthcare providers.The platform ensures accessible and efficient medical services by offering a range of features, including user registration, nearby health center search, appointment booking, and virtual consultations. Built with **HTML**, **CSS**, and **JavaScript** for the frontend and powered by a **Node.js** and **MySQL** backend, TeleMed delivers a seamless and secure user experience for all.
- 
+
 ---
 
 ## Key Features
