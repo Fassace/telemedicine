@@ -18,7 +18,14 @@ const app = express();
 //configure middleware
 
 app.use(express.static('public'));
-app.use(cors());  // Enable CORS for all routes
+app.use(cors({
+  origin: [
+    "http://localhost:3500", // Local frontend
+    "https://telemedicine-website.onrender.com", // Live frontend
+  ],
+  credentials: true, // Allow cookies or sessions
+}));
+// app.use(cors());  // Enable CORS for all routes
 // app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json()); //use json
 app.use(bodyParser.urlencoded({ extended: true })); //capture form data
