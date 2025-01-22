@@ -220,6 +220,26 @@ small{
     
 }
 
+/* Auto-Typing Effect */
+#autoTypingText {
+    border-right: 2px solid #007bff; /* Blinking cursor effect */
+    display: inline-block;
+    animation: blink 0.6s step-end infinite; /* Cursor blinking */
+    font-size: 1.1em; /* Adjust font size if needed */
+    color: #333; /* Text color */
+}
+
+/* Cursor blink animation */
+@keyframes blink {
+    from, to {
+        border-color: transparent;
+    }
+    50% {
+        border-color: #007bff;
+    }
+}
+
+
 .about-content {
     margin-left: 100px;
     margin-top: 0;
