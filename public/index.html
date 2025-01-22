@@ -65,12 +65,12 @@
             </nav>
         </div>
     </header>
-    <div class="inner"> 
-        <small>Welcome to Our</small>
-        <h2> Telemedicine Platform</h2>
-        <p>Online doctor visits for primary care, mental health, and therapy. <br>
-        Speak to a top doctor online and get personalized, high-quality healthcare from anywhere.</p>
-        <button type="button"> <a href="/telemedicine/api/patients/login" style="text-decoration: none; color: white;"> <span></span> Book an Appointment </a></button>
+    <<div class="inner"> 
+    <small>Welcome to Our</small>
+    <h2>Telemedicine Platform</h2>
+    <p id="autoTypingText"></p> <!-- Target the <p> for auto-typing -->
+    
+       <button type="button"> <a href="/telemedicine/api/patients/login" style="text-decoration: none; color: white;"> <span></span> Book an Appointment </a></button>
         
     </div>
 </section>
@@ -217,7 +217,7 @@ function typeEffect() {
             typeEffect(); // Restart typing
         }, delayAfterTyping);
     }
-}
+};
 
 // Scroll to Top Functionality
 function scrollToTop() {
@@ -225,7 +225,7 @@ function scrollToTop() {
         top: 0,
         behavior: "smooth"
     });
-}
+};
 
     
     // Show/hide the scroll-to-top button based on scrolling
@@ -237,6 +237,7 @@ function scrollToTop() {
             scrollToTopButton.style.display = "none"; // Hide the button
         }
     };
+    
 
     // Scroll to the top of the page
     function scrollToTop() {
@@ -244,7 +245,13 @@ function scrollToTop() {
             top: 0,
             behavior: "smooth" // Smooth scrolling
         });
-    }
+    };
+
+    // Start Auto Typing Effect on Page Load
+window.onload = function () {
+    typeEffect();
+};
+
 </script>
     
     
