@@ -196,6 +196,38 @@
   <div id="scrollToTop" onclick="scrollToTop()">↑</div>
 
 <script>
+
+    // Auto Typing Effect
+const typingText = "Online doctor visits for primary care, mental health, and therapy. Speak to a top doctor online and get personalized, high-quality healthcare from anywhere.";
+const typingSpeed = 50; // Typing speed in milliseconds
+const delayAfterTyping = 3000; // Delay before restarting in milliseconds
+
+let charIndex = 0;
+
+function typeEffect() {
+    const pElement = document.getElementById("autoTypingText");
+    if (charIndex < typingText.length) {
+        pElement.innerHTML += typingText.charAt(charIndex);
+        charIndex++;
+        setTimeout(typeEffect, typingSpeed);
+    } else {
+        setTimeout(() => {
+            charIndex = 0;
+            pElement.innerHTML = ""; // Clear the text
+            typeEffect(); // Restart typing
+        }, delayAfterTyping);
+    }
+}
+
+// Scroll to Top Functionality
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+    
     // Show/hide the scroll-to-top button based on scrolling
     window.onscroll = function() {
         const scrollToTopButton = document.getElementById("scrollToTop");
