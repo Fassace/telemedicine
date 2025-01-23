@@ -3,9 +3,15 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-// Use the environment variable or default to the hardcoded URL
 const pool = mysql.createPool({
-    uri: process.env.MYSQL_URL || 'mysql://root:RCOHZjRChIntEFvRrNZtyapXbNMDSrDs@mysql.railway.internal:3306/railway'
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    ssl: {
+        rejectUnauthorized: true, // Ensures a secure connection
+    },
 });
 
 // Export the promise-based pool
