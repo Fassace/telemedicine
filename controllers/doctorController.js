@@ -1,88 +1,64 @@
 // controllers/doctorController.js
-const db = require('../config/db'); // Connect to database
-const { validationResult } = require('express-validator'); // Back validation
+import pool from '../config/db.js';
+import { validationResult } from 'express-validator';
 
-// Function for registering a doctor
-exports.registerDoctor = async (req, res) => {
+// Register Doctor
+export const registerDoctor = async (req, res) => {
     const errors = validationResult(req);
-    // Check if any errors present in validation
-    if (!errors.isEmpty()) {
+    if (!errors.isEmpty())
         return res.status(400).json({ message: 'Please correct input errors', errors: errors.array() });
-    }
 
-    // Fetching input parameters from the request body
-    const { first_name, last_name, specialization, email, phone, schedule } = req.body;
+    const { first_name, last_name, email, specialization, phone, schedule } = req.body;
 
     try {
-        // Check if a doctor exists
-        const [doctor] = await db.execute('SELECT email FROM doctors WHERE email = ?', [email]);
-        if (doctor.length > 0) {
-            return res.status(400).json({ message: 'The doctor already exists' });
-        }
+        // Check if doctor already exists
+        const { rows: existing } = await pool.query(
+            'SELECT email FROM doctors WHERE email = $1',
+            [email]
+        );
+        if (existing.length > 0)
+            return res.status(400).json({ message: 'Doctor already exists' });
 
-        // Insert the record
-        await db.execute('INSERT INTO doctors (first_name, last_name, specialization, email, phone, schedule) VALUES (?, ?, ?, ?, ?, ?)', 
-            [first_name, last_name, specialization, email, phone, schedule]);
+        // Insert doctor
+        await pool.query(
+            `INSERT INTO doctors (first_name, last_name, email, specialization, phone, schedule) 
+             VALUES ($1, $2, $3, $4, $5, $6)`,
+            [first_name, last_name, email, specialization, phone, schedule]
+        );
 
-        //create session
-        req.session.doctorId = email; 
-        req.session.doctorFirstname = first_name;  
+        // Save session
+        req.session.doctorId = email;
+        req.session.doctorFirstname = first_name;
         req.session.doctorLastname = last_name;
         req.session.doctorSpecialization = specialization;
 
-        // Response
         return res.status(201).json({ message: 'New doctor registered successfully.' });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'An error occurred during registration', error: error.message });
+        console.error('Error registering doctor:', error);
+        return res.status(500).json({ message: 'An error occurred during registration', error: error.message });
     }
 };
 
-// Function to get doctor information (optional, if needed)
-
-
-exports.getDoctor = async (req, res) => { 
+// Get basic doctor info
+export const getDoctor = async (req, res) => {
     try {
-        const [doctors] = await db.execute('SELECT id, first_name, last_name FROM doctors');
-        res.status(200).json(doctors);
+        const { rows } = await pool.query(
+            'SELECT id, first_name, last_name FROM doctors'
+        );
+        res.status(200).json(rows);
     } catch (error) {
         console.error(error);
+        return res.status(500).json({ message: 'Error fetching doctors', error: error.message });
+    }
+};
+
+// Get all doctor details
+export const getAllDoctor = async (req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT * FROM doctors');
+        res.json(rows);
+    } catch (error) {
+        console.error('Error fetching doctors:', error);
         res.status(500).json({ message: 'Error fetching doctors', error: error.message });
     }
 };
-
-// all doctors details
-exports.getAlldoctor = async (req, res) => {
-    try {
-        const [doctors] = await db.query('SELECT * FROM doctors');
-        res.json(doctors);
-    } catch (err) {
-        console.error('Error fetching doctors:', err);
-        res.status(500).send('Error fetching doctors');
-    }
-};
-
-
-// // Function for editing doctor details
-// exports.editDoctor = async (req, res) => {
-//     const doctorId = req.params.id; // Example: Get doctor ID from request parameters
-
-//     const errors = validationResult(req);
-//     // Check if any errors present in validation
-//     if (!errors.isEmpty()) {
-//         return res.status(400).json({ message: 'Please correct input errors', errors: errors.array() });
-//     }
-
-//     // Fetching input parameters from the request body
-//     const { first_name, last_name, specialization, email, phone, schedule } = req.body;
-
-//     try {
-//         // Update doctor details
-//         await db.execute('UPDATE doctors SET first_name = ?, last_name = ?, specialization = ?, email = ?, phone = ?, schedule = ? WHERE id = ?', 
-//             [first_name, last_name, specialization, email, phone, schedule, doctorId]);
-//         return res.status(200).json({ message: 'Doctor details updated successfully.' });
-//     } catch (error) {
-//         console.error(error);
-//         return res.status(500).json({ message: "An error occurred during edit.", error: error.message });
-//     }
-// };

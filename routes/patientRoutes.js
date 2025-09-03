@@ -1,4 +1,4 @@
-// Importing packages and modules
+// Patient routes - Importing packages and modules
 const express = require('express');
 const { registerPatient, loginPatient, logoutPatient, getPatient, editPatient } = require('../controllers/patientController');
 const { check } = require('express-validator'); //validation

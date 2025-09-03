@@ -1,18 +1,26 @@
-const mysql = require('mysql2');
-const dotenv = require('dotenv');
+// db.js
+const { Pool } = require("pg");
+const dotenv = require("dotenv");
 
 dotenv.config();
 
-const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    ssl: {
-        rejectUnauthorized: true, // Ensures a secure connection
-    },
+const pool = new Pool({
+   host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  database: process.env.DB_DATABASE,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  ssl: { rejectUnauthorized: false }, // IMPORTANT for Supabase
 });
 
-// Export the promise-based pool
-module.exports = pool.promise();
+(async () => {
+  try {
+    const client = await pool.connect();
+    console.log("✅ Connected to local PostgreSQL successfully!");
+    client.release();
+  } catch (err) {
+    console.error("❌ Error connecting to local PostgreSQL:", err.message);
+  }
+})();
+
+module.exports = pool;

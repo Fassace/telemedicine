@@ -1,85 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Registration</title>
-    <link rel="stylesheet" href="/form.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Registration</title>
+  <link rel="stylesheet" href="/form.css">
 </head>
 <body>
+  <div class="login-container">
+    <h2>Doctor Register</h2>
+    <form id="registerForm">
+      <label for="regFirstname">First Name:</label>
+      <input type="text" id="regFirstname" required><br>
 
-    <div class="login-container">
-        <h2>Doctor Register</h2>
-        <form id="registerForm">
-            <label for="regFirstname">First Name:</label>
-            <input type="text" id="regFirstname" required>  <br>
-        
-            <label for="regLastname">Last Name:</label>
-            <input type="text" id="regLastname" required>   <br>
-        
-            <label for="regEmail">Email:</label>
-            <input type="email" id="regEmail" required>  <br>
-        
-            <label for="regSpecialization">Specialization:</label>
-            <input type="text" id="regSpecialization"> <br>
-        
-            <label for="regPhone">Phone:</label>
-            <input type="text" id="regPhone">   <br>
-        
-            <label for="regSchedule">Schedule:</label>
-            <textarea id="regSchedule"></textarea>   <br>
-        
-            <button type="submit">Register</button>
-        </form>
-        <!-- <p> Already have an account? <a href="/telemedicine/api/doctors/login"> Login here</a> </p> -->
-        <div id="message" style="display: none;"></div>
-    </div>
+      <label for="regLastname">Last Name:</label>
+      <input type="text" id="regLastname" required><br>
 
-    <script>
-        const messageDiv = document.getElementById('message');
+      <label for="regEmail">Email:</label>
+      <input type="email" id="regEmail" required><br>
 
-        function showMessage(type, text){
-            messageDiv.style.display = 'block';
-            if(type === 'success'){
-                messageDiv.style.color = 'green';
-            } else  {
-                messageDiv.style.color = 'red';
-            }
-            messageDiv.textContent = text;
+      <label for="regSpecialization">Specialization:</label>
+      <input type="text" id="regSpecialization" required><br>
 
-            setTimeout(() => {
-                messageDiv.style.display = 'none';
-            }, 3000);
-        }
+      <label for="regPhone">Phone:</label>
+      <input type="text" id="regPhone" required><br>
 
-        // Registration form
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+      <label for="regSchedule">Schedule:</label>
+      <textarea id="regSchedule" required></textarea><br>
 
-            const first_name = document.getElementById('regFirstname').value;
-            const last_name = document.getElementById('regLastname').value;
-            const email = document.getElementById('regEmail').value;
-            const specialization = document.getElementById('regSpecialization').value;
-            const phone = document.getElementById('regPhone').value;
-            const schedule = document.getElementById('regSchedule').value;
+      <button type="submit">Register</button>
+    </form>
 
-            // Transmit the data
-            const response = await fetch('https://telemedicine-website.onrender.com/telemedicine/api/doctors/register', { 
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ first_name, last_name, specialization, email, phone, schedule })
-            });
+    <div id="message" style="display:none;"></div>
+  </div>
 
-            const result = await response.json();
+  <script>
+    const messageDiv = document.getElementById('message');
 
-            if (response.status === 201) {
-                showMessage('success', result.message);
-            } else {
-                showMessage('failed', result.message);
-            }
+    function showMessage(type, text) {
+      messageDiv.style.display = 'block';
+      messageDiv.style.color = type === 'success' ? 'green' : 'red';
+      messageDiv.textContent = text;
+      setTimeout(() => { messageDiv.style.display = 'none'; }, 4000);
+    }
+
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const data = {
+        first_name: document.getElementById('regFirstname').value,
+        last_name: document.getElementById('regLastname').value,
+        email: document.getElementById('regEmail').value,
+        specialization: document.getElementById('regSpecialization').value,
+        phone: document.getElementById('regPhone').value,
+        schedule: document.getElementById('regSchedule').value,
+      };
+
+      try {
+        const response = await fetch('/telemedicine/api/doctors/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
         });
-    </script>
+
+        const result = await response.json();
+
+        if (response.status === 201) {
+          showMessage('success', result.message);
+          document.getElementById('registerForm').reset();
+        } else {
+          showMessage('error', result.message || (result.errors ? result.errors.map(e => e.msg).join(', ') : 'Error'));
+        }
+      } catch (err) {
+        showMessage('error', 'Something went wrong. Try again.');
+        console.error(err);
+      }
+    });
+  </script>
 </body>
 </html>
